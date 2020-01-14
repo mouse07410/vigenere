@@ -16,6 +16,15 @@ if (DEFINED MSVC_VERSION)
   set(OPENSSL_SSL_LIBRARY ${OPENSSL_ROOT_DIR}/lib/libssl.lib)
 endif()
 
+set(CMAKE_C_FLAGS_DEBUG "-DDEBUG -g -march=native -std=gnu17")
+set(CMAKE_C_FLAGS_MINSIZEREL "-Os -march=native -std=gnu17")
+set(CMAKE_C_FLAGS_RELWITHDEBINFO "-Os -Ofast -g -march=native -std=gnu17")
+set(CMAKE_C_FLAGS_RELEASE "-Os -Ofast -march=native -std=gnu17")
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS_RELWITHDEBUGINFO}")
+
+set(BIN_DIRECTORY bin)
+
 # Provider module
 add_library(vigenere MODULE vigenere.c)
 set_target_properties(vigenere PROPERTIES PREFIX "" OUTPUT_NAME "vigenere")
@@ -28,6 +37,10 @@ add_test(NAME vigenere COMMAND test_vigenere)
 set_tests_properties(vigenere
   PROPERTIES ENVIRONMENT "OPENSSL_MODULES=${CMAKE_BINARY_DIR}"
   )
+
+set(BINARY_TESTS_TARGETS
+        test_vigenere
+        )
 
 # No installation instruction, as this should never be used in production
 # If you still want to do so, just copy vigenere.so / vigenere.dll to an
